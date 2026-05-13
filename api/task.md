@@ -1,4 +1,5 @@
 Task1
+
 Создайте модель User с полями:
 id – integer, autoIncrement, primaryKey
 name – string, allowNull: false
