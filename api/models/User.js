@@ -18,12 +18,15 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      //   валидация на email формат
+      validate: { isEmail: { msg: 'invalid email format' } },
     },
     age: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      //   валидация: min 18, max 120
+      validate: {
+        min: { args: 18, msg: 'Age must be from 18 to 120' },
+        max: { args: 120, msg: 'Age must be from 18 to 120' },
+      },
     },
     isActive: {
       type: DataTypes.BOOLEAN,
