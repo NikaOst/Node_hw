@@ -126,8 +126,6 @@ const isAdminMiddleware = async (req, res, next) => {
   const userId = req.user.id;
   const user = await User.findByPk(userId);
 
-  console.log(user.role);
-
   if (!user || user.role !== 'admin') {
     return res.status(403).json({ message: 'denied access' });
   }
