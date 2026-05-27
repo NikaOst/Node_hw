@@ -49,7 +49,6 @@ authRouter.post('/login', async (req, res) => {
     if (!equelPasswords) {
       return res.status(401).json('Invalid email or password');
     }
-
     const token = jwt.sign(
       { userId: user._id, username: user.username, email: user.email },
       process.env.JWT_SECRET,
