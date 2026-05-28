@@ -24,6 +24,8 @@ postsRouter.post('/', authenticateJWT, async (req, res) => {
     const db = getDB();
 
     const { title, description } = req.body;
+    if (!title) return res.status(401).json('Title is required!');
+
     const user = req.user;
 
     const post = await db
