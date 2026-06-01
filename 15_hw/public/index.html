@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+      }
+      #messages {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        min-height: 100px;
+      }
+      input {
+        width: 70%;
+        padding: 8px;
+      }
+      button {
+        padding: 8px 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Чат</h1>
+
+    <input id="messageInput" type="text" placeholder="Введите сообщение" />
+    <button id="sendBtn">Send Message</button>
+
+    <div id="messages"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      const input = document.getElementById('messageInput');
+      const button = document.getElementById('sendBtn');
+      const messages = document.getElementById('messages');
+
+      button.addEventListener('click', () => {
+        const text = input.value.trim();
+        if (!text) return;
+
+        socket.emit('message', text);
+        input.value = '';
+      });
+
+      socket.on('message_ack', (ackText) => {
+        const p = document.createElement('p');
+        p.textContent = ackText;
+        messages.appendChild(p);
+      });
+    </script>
+  </body>
+</html>
