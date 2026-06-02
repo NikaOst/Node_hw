@@ -1,11 +1,26 @@
 import mongoose from 'mongoose';
 
-const productSchema = new mongoose.Schema({});
+const productSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    maxlength: 100,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    min: 1,
+  },
+  price: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+  dateAdded: {
+    type: Date,
+    default: Date.now(),
+  },
+});
 
 const Product = mongoose.model(productSchema);
 export default Product;
-
-// 1.	Название продукта (`name`): это строка, которая хранит название товара. Например, "Apple".
-// 2.	Количество (`quantity`): это число, которое показывает, сколько единиц товара добавлено в корзину. Например, 3.
-// 3.	Цена (`price`): это число, которое показывает стоимость одной единицы товара. Например, 0.5 (за одно яблоко).
-// 4.	Дата добавления (`dateAdded`): это дата и время, когда товар был добавлен в корзину. Мы можем автоматически задавать это поле с помощью Mongoose.
