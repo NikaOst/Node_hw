@@ -23,4 +23,31 @@ cartRouter.post('/', async (req, res) => {
   }
 });
 
+// PUT http://localhost:5000/api/cart/:id
+cartRouter.put('/:id', async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const product = await Product.findByIdAndUpdate(productId, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    res.status(200).json({ product });
+  } catch (error) {
+    res.status(500).json({ message: 'Cannot update a product', error: error.message });
+  }
+});
+
+// DELETE http://localhost:5000/api/cart/:id
+cartRouter.delete('/:id', async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const product = await Product.findByIdAndDelete(productId);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    res.status(200).json({ message: 'Product was deleted' });
+  } catch (error) {
+    res.status(500).json({ message: 'Cannot delete a product', error: error.message });
+  }
+});
+
 export default cartRouter;
