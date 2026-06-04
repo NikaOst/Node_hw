@@ -27,8 +27,11 @@ cartRouter.post('/', async (req, res) => {
 cartRouter.put('/:id', async (req, res) => {
   try {
     const productId = req.params.id;
+    const { name, quantity, price } = req.body;
+    if (!name || !quantity || !price)
+      return res.status(404).json({ message: 'Name, quantity, price are required' });
     const product = await Product.findByIdAndUpdate(productId, req.body, {
-      new: true,
+      returnDocument: 'after',
       runValidators: true,
     });
     if (!product) return res.status(404).json({ message: 'Product not found' });
