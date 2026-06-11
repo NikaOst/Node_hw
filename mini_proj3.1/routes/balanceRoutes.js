@@ -1,5 +1,6 @@
 import express from 'express';
 import User from '../models/User.js';
+import Transaction from '../models/Transaction.js';
 
 const balanceRouter = express.Router();
 
@@ -17,6 +18,24 @@ balanceRouter.post('/set-balance', async (req, res) => {
     res.status(201).json({ balance });
   } catch (error) {
     res.status(500).json({ message: 'Cannot set a new balance', error: error.message });
+  }
+});
+
+// POST http://127.0.0.1:3333/api/user/:id/add-balance
+balanceRouter.post('/:id/add-balance', async (req, res) => {
+  try {
+    const { amount } = req.body;
+    const userId = req.params.id;
+    if (!amount) return res.status(404).json({ message: 'Amount cannot be empty' });
+    if (amount < 0) return res.status(400).json({ message: 'Amount must be more than 0' });
+    const user = await User.findById(userId);
+    user.currentBalance += amount;
+    const transaction = await Transaction.create({ type: 'income', amount: amount });
+    user.transactions.push(transaction.id);
+    await user.save();
+    res.status(201).json({ user });
+  } catch (error) {
+    res.status(500).json({ message: 'Cannot add to the balance', error: error.message });
   }
 });
 
