@@ -61,4 +61,16 @@ balanceRouter.post('/:id/add-expense', async (req, res) => {
   }
 });
 
+// GET http://127.0.0.1:3333/api/user/balance
+balanceRouter.get('/balance', async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) return res.status(404).json({ message: 'UserId cannot be empty' });
+    const user = await User.findById(userId).populate('transactions', 'type amount date');
+    res.status(200).json({ user });
+  } catch (error) {
+    res.status(500).json({ message: 'Cannot get balance', error: error.message });
+  }
+});
+
 export default balanceRouter;
