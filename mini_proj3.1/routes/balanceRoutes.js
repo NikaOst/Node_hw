@@ -39,4 +39,26 @@ balanceRouter.post('/:id/add-balance', async (req, res) => {
   }
 });
 
+// POST http://127.0.0.1:3333/api/user/:id/add-expense
+balanceRouter.post('/:id/add-expense', async (req, res) => {
+  try {
+    const { amount } = req.body;
+    const userId = req.params.id;
+    if (!amount) return res.status(404).json({ message: 'Amount cannot be empty' });
+    if (amount < 0) return res.status(400).json({ message: 'Amount must be more than 0' });
+    const user = await User.findById(userId);
+    if (user.currentBalance < amount)
+      return res.status(400).json({ message: 'Not enough money at the balance' });
+    user.currentBalance -= amount;
+    const transaction = await Transaction.create({ type: 'expense', amount: amount });
+    user.transactions.push(transaction.id);
+    await user.save();
+    res.status(201).json({ user });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: 'Cannot withdraw money from the balance', error: error.message });
+  }
+});
+
 export default balanceRouter;
