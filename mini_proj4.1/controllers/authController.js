@@ -32,11 +32,9 @@ export const login = async (req, res) => {
     if (!equelPasswords) {
       return res.status(401).json('Invalid email or password');
     }
-    const token = jwt.sign(
-      { userId: user._id, username: user.username, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' },
-    );
+    const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
 
     res.status(200).json({ token: token });
   } catch (error) {
